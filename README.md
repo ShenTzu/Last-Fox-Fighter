@@ -3,7 +3,7 @@
 ## Description
 ![Image](https://static.wixstatic.com/media/e4c1c1_f5a63c5f6688466692be6250379336f5~mv2.gif)
 
-The Last Fox Fighter is a top down twinstick shooter where you fight increasinly difficult swarms of drones and powerful capital ships, upgrading your fighter as you go to improve your odds. I built it using Godot over a 8 month period from April 2024 to December 2024.
+The Last Fox Fighter is a top down twinstick shooter set in the universe of my other game, Fuchian Chronicles. Fight increasingly difficult swarms of drones and powerful capital ships, all the while upgrading your fighter with improved stats and abilities to improve your odds. I built it using Godot over a 8 month period from April 2024 to December 2024.
 
 This repository contains various scripts for the game as a way to demonstrate my coding abilities and thought process, as well as notes on my personal design decisions and thoughts on room for improvement.
 
