@@ -1,6 +1,7 @@
 # The Last Fox Fighter
 
 ## Description
+[![Video Title](https://static.wixstatic.com/media/e4c1c1_3670ce7d915d45009fb20d9109c00b23~mv2.gif)](https://www.youtube.com/watch?v=-M4gjy23vYI)
 The Last Fox Fighter is a top down twinstick shooter where you fight increasinly difficult swarms of drones and powerful capital ships, upgrading your fighter as you go to improve your odds. I built it using Godot as a learning/portfolio project.
 
 This repository contains various scripts for the game as a way to demonstrate my coding abilities and thought process, as well as notes on my personal design decisions and thoughts on room for improvement.
