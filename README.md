@@ -14,4 +14,7 @@ I had previously made several games using RPGMaker MV, and after completing my l
 A web-playable demo is available on [itch.io](https://shentzu.itch.io/the-last-fox-fighter), while the full version is available for $1 on itch.io, or as free DLC for owners of my other game, Fuchian Chronicles, on [Steam](https://store.steampowered.com/app/1789050/Fuchian_Chronicles/).
 
 ## Contributing
-This repo is currently not accepting contributions.
+This repository contains sample code for The Last Fox Fighter. While I'm not currently accepting contributions, you're welcome to:
+- Fork the repository
+- Study the code examples
+- Try the playable demo [here](https://shentzu.itch.io/the-last-fox-fighter)
