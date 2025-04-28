@@ -1,3 +1,6 @@
+# This is a code sample from my game, the Last Fox Fighter. It is the script I wrote to control the player's spaceship, including movement, attacks, and special abilities. 
+# The script also contains code to control the player's sprite and its various components, such as thrusters that fire when the ship turns, and various signals to communicate the player's state to the game's HUD.
+
 extends Area2D
 class_name Player
 
@@ -35,11 +38,11 @@ var screen_size
 func _ready():
 	$AnimatedSprite2D.play()
 
-	# Increase player stats based on the upgrades they purchased
+	# Adjusts player stats based on the upgrades they purchased
 	acceleration += (GlobalVariable.accellvl)
 	angular_speed += (GlobalVariable.turnlvl * 0.5)
 	special_delay -= (GlobalVariable.sCDlvl * 0.10)
-	special_speed += (100*GlobalVariable.sSpeedlvl)
+	special_speed += (100 * GlobalVariable.sSpeedlvl)
 	
 	# Disables the boost ability if the player hasn't unlocked it, unless they are in the tutorial
 	if GlobalVariable.boostlvl == 0 && !GlobalVariable.inTutorial:
@@ -77,16 +80,18 @@ func _process(delta):
 					bodies.picked_up(2)     
 	
 	if can_move:
-		if GlobalVariable.newtonian: #Movement if newtonian physics is active
-			heading.x = 0
+		if GlobalVariable.newtonian: #Movement if newtonian physics mode is active
+			# heading is used to determine intent (e.g. the player wants to move towards up and right), and is used to control animations
+			heading.x = 0 
 			heading.y = 0
 			if Input.is_action_pressed("key_right") && GlobalVariable.player_alive && LTrigger == 0:
 				heading.x += acceleration
+				# Using the boost ability accelerates the player quickly in the chosen direction
 				if Input.is_action_pressed("key_boost") && can_boost && velocity.x < maxspeed:
 					$Boost2.play()
 					boosted.emit(boost_delay)
 					can_boost = false
-					velocity.x += acceleration * 100
+					velocity.x += acceleration * 100 # Velocity controls actual movement
 					await get_tree().create_timer(0.2).timeout
 					$Boost.play()
 					await get_tree().create_timer(boost_delay).timeout
@@ -149,14 +154,13 @@ func _process(delta):
 					velocity.y = clamp(velocity.y, 0, velocity.y)
 
 			if velocity.length() > 0:
-
 				velocity = velocity.clamp(Vector2(-maxspeed, -maxspeed), Vector2(maxspeed,maxspeed))
 				
 			GlobalVariable.player_vel = velocity
 			position += velocity * delta
 			position = position.clamp(GlobalVariable.boundTL, GlobalVariable.boundBR)
 		
-		else: # Movement if newtonian physics is not active
+		else: # Movement if newtonian physics mode is not active
 			var NNSpeed = maxspeed/100
 			if Input.is_action_pressed("key_right") && GlobalVariable.player_alive && LTrigger == 0:
 				position.x += NNSpeed
@@ -180,13 +184,13 @@ func _process(delta):
 		if GlobalVariable.player_alive:
 			rs_look.y = Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
 			rs_look.x = -Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
-		if rs_look.length() >= 0.3: # Doesn't use 0.0 to prevent small touches from triggering the turn
+		if rs_look.length() >= 0.3: # Doesn't use 0.0 to prevent small touches on the joystick triggering the turn
 			var ogrot = rotation
 			var angledif
 			var new_transform = transform.looking_at(position + rs_look)
 			transform  = transform.interpolate_with(new_transform, angular_speed * 0.5 * delta)
 			
-			# Compare original rotation and current rotation to see which way the player is turning
+			# Compare original rotation and current rotation to see which way the player is turning and show the appropriate RCS thrusters
 			angledif = angle_difference(ogrot, rotation)
 			if abs(angledif) > 0.00:
 				if angledif < 0:
@@ -222,7 +226,7 @@ func _process(delta):
 				$"RCS-TR".hide()
 				$"RCS-BL".hide()
 		
-		#RCS/Thruster animations
+		# RCS/Thruster animations
 		if !GlobalVariable.player_alive:
 			$FrontThrusters.hide()
 			$RearThrusters.hide()
@@ -232,7 +236,7 @@ func _process(delta):
 			$"RCS-BL".hide()
 		elif heading != Vector2.ZERO && GlobalVariable.player_alive:
 			if old_velocity != velocity:
-				# Determines which thrusters to show based on the player's facing and which direction they're accelerating towards
+				# Determines which thrusters to show based on the player's facing and which direction they're accelerating towards. Combined with thrusters used for turning, this will account for all movement.
 				if -PI/4 <= facing && facing <= PI/4:
 					if heading.x < 0:
 						$"RCS-BR".show()
@@ -317,7 +321,8 @@ func _process(delta):
 					elif heading.y > 0:
 						$RearThrusters.show()
 						$FrontThrusters.hide()
-				
+
+				# Lock each thrusters within a range of movement so they don't appear in nonsensical orientations
 				$"RCS-BL".global_rotation = clampf($"RCS-BL".global_rotation,global_rotation - ((5*PI)/6),global_rotation - (PI/6))
 				$"RCS-TL".global_rotation = clampf($"RCS-TL".global_rotation,global_rotation - ((5*PI)/6),global_rotation - (PI/6))
 				$"RCS-BR".global_rotation = clampf($"RCS-BR".global_rotation,global_rotation + (PI/6),global_rotation + ((5*PI)/6))
@@ -346,7 +351,7 @@ func _process(delta):
 				$"RCS-TR".hide()
 				$"RCS-BL".hide()
 	
-	#Normal weapon
+	# Normal weapon
 	if RTrigger != 0 && can_fire && GlobalVariable.player_alive:
 		var bullet = bullet_scene.instantiate()
 		bullet.position = position
@@ -360,7 +365,7 @@ func _process(delta):
 		await get_tree().create_timer(fire_delay).timeout
 		can_fire = true
 	
-	#Special Weapon
+	# Special Weapon
 	if Input.is_action_pressed("key_special") && GlobalVariable.player_alive && can_special:
 		var special = special_scene.instantiate()
 		special.position = position
